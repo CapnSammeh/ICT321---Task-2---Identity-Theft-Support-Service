@@ -21,19 +21,19 @@ data = etl.fromcsv("reportingCentre_service_locations.csv")
 def get_services():
     # Define the Postcode by the Request Query param 'postcode'
     postcode = request.query.postcode
-    
+
     # Lookup the Postcode from our File
     lookup = etl.lookup(data, "Postcode", ("Suburb", "Service"))
     lookupResponse = lookup[postcode]
-    
-    #Iterate through the response to create our Services List, as well as identify the Suburb Name
+
+    # Iterate through the response to create our Services List, as well as identify the Suburb Name
     servicesList = []
-    for key,value in lookupResponse:
+    for key, value in lookupResponse:
         servicesList.append(value)
         suburb = key
 
-    #Finally, return a dictionary (That Bottle automatically turns into a JSON object) with our required content.
-    return dict(data={"suburb": suburb, "services":servicesList})
+    # Finally, return a dictionary (That Bottle automatically turns into a JSON object) with our required content.
+    return dict(data={"postcode": postcode, "suburb": suburb, "services": servicesList})
 
 
 # Get Reporting Centre Route
@@ -41,23 +41,27 @@ def get_services():
 def get_reporting_centre():
     # Define the Service by the Request Query param 'service'
     service = request.query.service
-    
+
     # Use Facet to slice the data by Service
     services = etl.facet(data, "Service")
     # Filter this list down to only the service we've queried
-    centres = (services[service])
-    
-    # Define the fields in the data we want to respond with
-    keys = ['CentreID', 'Suburb', 'Lat', 'Long']
-    
+    centres = services[service]
+
     # Iterate through the list of Centres and create a dictionary for each of the responses using the keys. Then, populate the list with these dictionaries
     centresList = []
     for i in range(len(centres["CentreID"])):
-        d = {k:v for k,v in zip(keys, centres[i + 1])}
+        if (i == 0):
+            continue
+        d = {
+            "CentreID": centres[i][0],
+            "Suburb": centres[i][1],
+            "Latitude": centres[i][4],
+            "Longitude": centres[i][5],
+        }
         centresList.append(d)
 
     # Finally, return a dictionary with our required content in the relevant JSON structure.
-    return dict(data={"service": service, "reporting_centres":[centresList]})
+    return dict(data={"service": service, "reporting_centres": centresList})
 
 
 run(host="localhost", port=8080, reloader=True)
