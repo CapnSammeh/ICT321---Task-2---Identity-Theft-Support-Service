@@ -41,27 +41,25 @@ def get_services():
 def get_reporting_centre():
     # Define the Service by the Request Query param 'service'
     service = request.query.service
-
-    # Use Facet to slice the data by Service
-    services = etl.facet(data, "Service")
+    # Use DictLookup to slice the data by Service into a dict
+    services = etl.dictlookup(data, "Service")    
     # Filter this list down to only the service we've queried
     centres = services[service]
-
+    
     # Iterate through the list of Centres and create a dictionary for each of the responses using the keys. Then, populate the list with these dictionaries
     centresList = []
-    for i in range(len(centres["CentreID"])):
-        if (i == 0):
+    for i in range(len(centres)):
+        if(i == 0):
             continue
-        d = {
-            "CentreID": centres[i][0],
-            "Suburb": centres[i][1],
-            "Latitude": centres[i][4],
-            "Longitude": centres[i][5],
+        centreObject = {
+            "CentreID": centres[i]['CentreID'],
+            "Suburb": centres[i]['Suburb'],
+            "Latitude": centres[i]['Lat'],
+            "Longitude": centres[i]['Lon'],
         }
-        centresList.append(d)
+        centresList.append(centreObject)
 
-    # Finally, return a dictionary with our required content in the relevant JSON structure.
+    # Finally, return a dictionary with our list of centres in the relevant JSON structure.
     return dict(data={"service": service, "reporting_centres": centresList})
-
 
 run(host="localhost", port=8080, reloader=True)
