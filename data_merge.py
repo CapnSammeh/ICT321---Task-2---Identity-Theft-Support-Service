@@ -14,6 +14,10 @@ The output file "reportingCentre_service_locations.csv" consists of the followin
     ✅ Postcode – the “Postcode” from reportingCentre.csv 
     ✅ Latitude – the “Lat” value from centreLocations.xml 
     ✅ Longitude – the “Lon” value from centreLocations.xml
+
+Other features:
+    ❌ Input Error Handling
+    ❌ Clearly Documented
 '''
 
 import petl as etl
