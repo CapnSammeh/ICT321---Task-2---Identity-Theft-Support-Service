@@ -1,0 +1,74 @@
+CentreID,Suburb,State,Postcode,Lat,Lon,CentreServiceID,Service
+1,Hurstville,NSW,1493,-33.975869,151.088939,1,Incident_Response
+1,Hurstville,NSW,1493,-33.975869,151.088939,2,Wellbeing_Support
+10,Melbourne,VIC,3000,-37.814563,144.970267,23,Incident_Response
+10,Melbourne,VIC,3000,-37.814563,144.970267,24,Wellbeing_Support
+10,Melbourne,VIC,3000,-37.814563,144.970267,25,Social_Support
+10,Melbourne,VIC,3000,-37.814563,144.970267,26,Legal_Advice
+10,Melbourne,VIC,3000,-37.814563,144.970267,27,Financial_Advice
+11,Preston,VIC,3072,-37.738736,145.000515,28,Incident_Response
+12,Petticoat Creek,VIC,3233,-38.718949,143.725959,29,Incident_Response
+13,Douglas,VIC,3409,-37.842988,144.892631,30,Incident_Response
+13,Douglas,VIC,3409,-37.842988,144.892631,31,Wellbeing_Support
+14,Mildura,VIC,3500,-34.181714,142.163072,32,Incident_Response
+14,Mildura,VIC,3500,-34.181714,142.163072,33,Wellbeing_Support
+15,Broadford,VIC,3658,-37.203001,145.050171,34,Incident_Response
+16,Officer,VIC,3809,-38.063056,145.40958,35,Incident_Response
+16,Officer,VIC,3809,-38.063056,145.40958,36,Wellbeing_Support
+17,Nowa Nowa,VIC,3887,-37.733238,148.089423,37,Incident_Response
+17,Nowa Nowa,VIC,3887,-37.733238,148.089423,38,Wellbeing_Support
+17,Nowa Nowa,VIC,3887,-37.733238,148.089423,39,Social_Support
+17,Nowa Nowa,VIC,3887,-37.733238,148.089423,40,Legal_Advice
+17,Nowa Nowa,VIC,3887,-37.733238,148.089423,41,Financial_Advice
+18,Langsborough,VIC,3971,-38.651487,146.675098,42,Incident_Response
+19,Brisbane,QLD,4000,-27.46758,153.027892,43,Incident_Response
+19,Brisbane,QLD,4000,-27.46758,153.027892,44,Wellbeing_Support
+19,Brisbane,QLD,4000,-27.46758,153.027892,45,Social_Support
+19,Brisbane,QLD,4000,-27.46758,153.027892,46,Legal_Advice
+19,Brisbane,QLD,4000,-27.46758,153.027892,47,Financial_Advice
+2,Sydney,NSW,2000,-33.867139,151.207114,3,Incident_Response
+2,Sydney,NSW,2000,-33.867139,151.207114,4,Wellbeing_Support
+2,Sydney,NSW,2000,-33.867139,151.207114,5,Social_Support
+2,Sydney,NSW,2000,-33.867139,151.207114,6,Legal_Advice
+2,Sydney,NSW,2000,-33.867139,151.207114,7,Financial_Advice
+20,Robertson,QLD,4109,-27.565733,153.057213,48,Incident_Response
+21,Logan Village,QLD,4207,-27.767054,153.116881,49,Incident_Response
+21,Logan Village,QLD,4207,-27.767054,153.116881,50,Wellbeing_Support
+22,Ipswich,QLD,4305,-27.614604,152.760876,51,Incident_Response
+22,Ipswich,QLD,4305,-27.614604,152.760876,52,Wellbeing_Support
+22,Ipswich,QLD,4305,-27.614604,152.760876,53,Social_Support
+23,Cattle Creek,QLD,4407,-27.6483,150.836678,54,Incident_Response
+23,Cattle Creek,QLD,4407,-27.6483,150.836678,55,Wellbeing_Support
+24,Caboolture,QLD,4510,-27.085007,152.951707,56,Incident_Response
+25,Booie,QLD,4610,-26.498426,151.935421,57,Incident_Response
+26,Rockhampton,QLD,4700,-23.378941,150.512323,58,Incident_Response
+26,Rockhampton,QLD,4700,-23.378941,150.512323,59,Wellbeing_Support
+26,Rockhampton,QLD,4700,-23.378941,150.512323,60,Social_Support
+27,Townsville,QLD,4810,-19.267358,146.80654,61,Incident_Response
+27,Townsville,QLD,4810,-19.267358,146.80654,62,Wellbeing_Support
+27,Townsville,QLD,4810,-19.267358,146.80654,63,Social_Support
+27,Townsville,QLD,4810,-19.267358,146.80654,64,Legal_Advice
+27,Townsville,QLD,4810,-19.267358,146.80654,65,Financial_Advice
+28,Cairns,QLD,4870,-16.925397,145.775178,66,Incident_Response
+28,Cairns,QLD,4870,-16.925397,145.775178,67,Wellbeing_Support
+28,Cairns,QLD,4870,-16.925397,145.775178,68,Social_Support
+29,Adelaide,SA,5000,-34.92577,138.599732,69,Incident_Response
+29,Adelaide,SA,5000,-34.92577,138.599732,70,Wellbeing_Support
+29,Adelaide,SA,5000,-34.92577,138.599732,71,Social_Support
+29,Adelaide,SA,5000,-34.92577,138.599732,72,Legal_Advice
+29,Adelaide,SA,5000,-34.92577,138.599732,73,Financial_Advice
+3,Auburn,NSW,2144,-33.849322,151.033421,8,Incident_Response
+3,Auburn,NSW,2144,-33.849322,151.033421,9,Wellbeing_Support
+4,Riverwood,NSW,2210,-33.949859,151.052469,10,Incident_Response
+4,Riverwood,NSW,2210,-33.949859,151.052469,11,Wellbeing_Support
+4,Riverwood,NSW,2210,-33.949859,151.052469,12,Social_Support
+5,Fingal Bay,NSW,2315,-32.748113,152.170141,13,Incident_Response
+6,Harrington,NSW,2427,-31.872153,152.689811,14,Incident_Response
+7,Back Forest,NSW,2535,-34.853655,150.678507,15,Incident_Response
+7,Back Forest,NSW,2535,-34.853655,150.678507,16,Wellbeing_Support
+7,Back Forest,NSW,2535,-34.853655,150.678507,17,Social_Support
+8,Jindabyne,NSW,2627,-36.415074,148.618871,18,Incident_Response
+8,Jindabyne,NSW,2627,-36.415074,148.618871,19,Wellbeing_Support
+8,Jindabyne,NSW,2627,-36.415074,148.618871,20,Social_Support
+9,Benolong,NSW,2830,-32.413736,148.63938,21,Incident_Response
+9,Benolong,NSW,2830,-32.413736,148.63938,22,Wellbeing_Support
