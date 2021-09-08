@@ -4,8 +4,7 @@ RESTFUL Web Service Demo
 In this  demo,  you  are  required  to  implement  a  Python script with the name ‘web_finder.py’ to provide two RESTful Web services:
     • Get  reporting  centre  services by postcode. The server should accept a ‘getServices’ query from the client browser similar to “/getServices?postcode=xxxx”. After processing this request, the service should return a HTML document containing the list of available services for a given postcode, including the following fields (attributes): 
         o Service, Suburb. 
-    • Get reporting centre by service name. The server should accept a ‘getRCentre’ query from  the client browser similar to “/getRCentre?service=xxxx”. After processing this 
-    request, the service should return a HTML document containing the list of available reporting centres for a given service, including the following fields (attributes): 
+    • Get reporting centre by service name. The server should accept a ‘getRCentre’ query from  the client browser similar to “/getRCentre?service=xxxx”. After processing this request, the service should return a HTML document containing the list of available reporting centres for a given service, including the following fields (attributes): 
         o CentreID, Suburb, Latitude, Longitude. 
     The Python Bottle and petl frameworks are required for this implementation. Data for the  service is from the output file “reportingCentre_service_locations.csv” of the integration demo.
 """
@@ -40,10 +39,25 @@ def get_services():
 # Get Reporting Centre Route
 @route("/getRCentre")
 def get_reporting_centre():
+    # Define the Service by the Request Query param 'service'
     service = request.query.service
-    lookup = etl.lookup(data, "Service", ("CentreID", "Suburb", "Lat", "Lon"))
-    lookupResponse = lookup[service]
-    return template("{{response}}", response=lookupResponse)
+    
+    # Use Facet to slice the data by Service
+    services = etl.facet(data, "Service")
+    # Filter this list down to only the service we've queried
+    centres = (services[service])
+    
+    # Define the fields in the data we want to respond with
+    keys = ['CentreID', 'Suburb', 'Lat', 'Long']
+    
+    # Iterate through the list of Centres and create a dictionary for each of the responses using the keys. Then, populate the list with these dictionaries
+    centresList = []
+    for i in range(len(centres["CentreID"])):
+        d = {k:v for k,v in zip(keys, centres[i + 1])}
+        centresList.append(d)
+
+    # Finally, return a dictionary with our required content in the relevant JSON structure.
+    return dict(data={"service": service, "reporting_centres":[centresList]})
 
 
 run(host="localhost", port=8080, reloader=True)
