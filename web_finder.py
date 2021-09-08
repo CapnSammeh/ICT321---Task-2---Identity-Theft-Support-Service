@@ -9,47 +9,73 @@ In this  demo,  you  are  required  to  implement  a  Python script with the nam
     The Python Bottle and petl frameworks are required for this implementation. Data for the  service is from the output file “reportingCentre_service_locations.csv” of the integration demo.
 
 Other features:
-    ❌ Input Error Handling
-    ❌ Clearly Documented
+    ✅ Input Error Handling
+    ✅ Clearly Documented
 """
 
-from bottle import route, request, template, run
+from bottle import app, abort, route, request, run
 import petl as etl
+
+app.catchall = False
 
 # Get Import Data
 data = etl.fromcsv("reportingCentre_service_locations.csv")
 
-
 # Get Services Route
-@route("/getServices")
+@route("/getServices", method='GET')
 def get_services():
-    # Define the Postcode by the Request Query param 'postcode'
-    postcode = request.query.postcode
+    # Define the Postcode by the Request Query param 'postcode' and ensure it meets the Aus. Standard
+    postcodeInput = request.query.postcode
+    
+    # Typically I would use the RE Library to perform a REGEX match here, but we're not allowed to use any libraries other than Bottle and PETL 😔
+    # Generate a list of the valid Postcodes that appear in the file; we'll use this list to validate the user input
+    postcodes = etl.values(data, "Postcode")
+    validPostcodes = []
+    for postcode in postcodes:
+        if postcode not in validPostcodes:
+            validPostcodes.append(postcode)
 
-    # Lookup the Postcode from our File
-    lookup = etl.lookup(data, "Postcode", ("Suburb", "Service"))
-    lookupResponse = lookup[postcode]
+    # Error Handling
+    if(len(postcodeInput) != 4):
+        abort(400, "Invalid Postcode; please adhere to the XXXX format")
+    elif(postcodeInput not in validPostcodes):
+        abort(404, "No content available for the supplied postcode")
+    
+    try:
+        # Lookup the Postcode from our File
+        lookup = etl.lookup(data, "Postcode", ("Suburb", "Service"))
+        lookupResponse = lookup[postcodeInput]
 
-    # Iterate through the response to create our Services List, as well as identify the Suburb Name
-    servicesList = []
-    for key, value in lookupResponse:
-        servicesList.append(value)
-        suburb = key
+        # Iterate through the response to create our Services List, as well as identify the Suburb Name
+        servicesList = []
+        for key, value in lookupResponse:
+            servicesList.append(value)
+            suburb = key
 
-    # Finally, return a dictionary (That Bottle automatically turns into a JSON object) with our required content.
-    return dict(data={"postcode": postcode, "suburb": suburb, "services": servicesList})
-
+        # Finally, return a dictionary (That Bottle automatically turns into a JSON object) with our required content.
+        return dict(data={"postcode": postcodeInput, "suburb": suburb, "services": servicesList})
+    except:
+        # This is likely to never occur, but better safe than sorry!
+        abort(204, "Other")
 
 # Get Reporting Centre Route
-@route("/getRCentre")
+@route("/getRCentre", method='GET')
 def get_reporting_centre():
     # Define the Service by the Request Query param 'service'
     service = request.query.service
+    
+    if(len(service) == ''):
+        abort(400, "A service must be provided")
+
     # Use DictLookup to slice the data by Service into a dict
     services = etl.dictlookup(data, "Service")    
     # Filter this list down to only the service we've queried
-    centres = services[service]
-    
+    try:
+        centres = services[service]
+    except:
+        print("snap")
+        abort(404, "Please provide a valid Service")
+
     # Iterate through the list of Centres and create a dictionary for each of the responses using the keys. Then, populate the list with these dictionaries
     centresList = []
     for i in range(len(centres)):
