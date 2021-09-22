@@ -36,6 +36,7 @@ def get_services():
             validPostcodes.append(postcode)
 
     # Error Handling
+    # TODO Need considerations for asking for all Services irrespective of Postcode.
     if(len(postcodeInput) != 4):
         abort(400, "Invalid Postcode; please adhere to the XXXX format")
     elif(postcodeInput not in validPostcodes):
@@ -66,6 +67,7 @@ def get_reporting_centre():
     
     if(len(service) == ''):
         abort(400, "A service must be provided")
+        # TODO | This isn't good API design; when someone queries the endpoint and doesn't specify a service, we should return all the information instead
 
     # Use DictLookup to slice the data by Service into a dict
     services = etl.dictlookup(data, "Service")    
