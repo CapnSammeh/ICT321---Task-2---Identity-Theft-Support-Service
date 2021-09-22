@@ -13,7 +13,7 @@ Other features:
     ✅ Clearly Documented
 """
 
-from bottle import app, abort, route, request, run
+from bottle import ServerAdapter, app, abort, route, request, run
 import petl as etl
 
 app.catchall = False
@@ -36,12 +36,25 @@ def get_services():
             validPostcodes.append(postcode)
 
     # Error Handling
-    # TODO Need considerations for asking for all Services irrespective of Postcode.
-    if(len(postcodeInput) != 4):
+    # TODO This needs to be tidied up
+    if(postcodeInput != '' and len(postcodeInput) != 4):
         abort(400, "Invalid Postcode; please adhere to the XXXX format")
-    elif(postcodeInput not in validPostcodes):
+    elif(postcodeInput != '' and postcodeInput not in validPostcodes):
         abort(404, "No content available for the supplied postcode")
     
+    elif(postcodeInput == ''):
+        # Lookup the Postcode from our File
+        lookup = etl.lookup(data, ("Postcode", "Suburb"), "Service")
+        print(lookup)
+
+        #Iterate through the response to create our Services List, as well as identify the Suburb Name
+        servicesList = []
+        for key, value in lookup.items():
+            test = {"postcode": key[0], "suburb": key[1], "services":value}
+            servicesList.append(test)
+
+        return dict(data=servicesList)
+
     try:
         # Lookup the Postcode from our File
         lookup = etl.lookup(data, "Postcode", ("Suburb", "Service"))
