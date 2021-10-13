@@ -13,7 +13,7 @@ Other features:
     ✅ Clearly Documented
 """
 
-from bottle import ServerAdapter, app, abort, route, request, run
+from bottle import app, abort, route, request, run
 import petl as etl
 
 app.catchall = False
@@ -24,7 +24,7 @@ data = etl.fromcsv("reportingCentre_service_locations.csv")
 # Get Services Route
 @route("/getServices", method='GET')
 def get_services():
-    # Define the Postcode by the Request Query param 'postcode' and ensure it meets the Aus. Standard
+    # Define the Postcode by the Request Query param 'postcode'
     postcodeInput = request.query.postcode
     
     # Typically I would use the RE Library to perform a REGEX match here, but we're not allowed to use any libraries other than Bottle and PETL 😔
@@ -75,36 +75,68 @@ def get_services():
 # Get Reporting Centre Route
 @route("/getRCentre", method='GET')
 def get_reporting_centre():
-    # Define the Service by the Request Query param 'service'
-    service = request.query.service
-    
-    if(len(service) == ''):
-        abort(400, "A service must be provided")
-        # TODO | This isn't good API design; when someone queries the endpoint and doesn't specify a service, we should return all the information instead
+    # Define the Service by the Request Query param 'service' 
+    query = request.query.service
 
-    # Use DictLookup to slice the data by Service into a dict
-    services = etl.dictlookup(data, "Service")    
-    # Filter this list down to only the service we've queried
-    try:
-        centres = services[service]
-    except:
-        print("snap")
-        abort(404, "Please provide a valid Service")
+    # Generate both a list of all serivces, and a dictionary lookup of the services data.
+    serviceDictionary = etl.dictlookup(data, "Service")
+    allServices = etl.values(data, "Service")
 
-    # Iterate through the list of Centres and create a dictionary for each of the responses using the keys. Then, populate the list with these dictionaries
-    centresList = []
-    for i in range(len(centres)):
-        if(i == 0):
-            continue
-        centreObject = {
-            "CentreID": centres[i]['CentreID'],
-            "Suburb": centres[i]['Suburb'],
-            "Latitude": centres[i]['Lat'],
-            "Longitude": centres[i]['Lon'],
-        }
-        centresList.append(centreObject)
+    # Get all the Services Available
+    serviceList = []
+    for i in range(len(allServices)):
+      if(i == 0):
+         continue
+      service = allServices[i]
+      if(service not in serviceList):
+         serviceList.append(service)
 
-    # Finally, return a dictionary with our list of centres in the relevant JSON structure.
-    return dict(data={"service": service, "reporting_centres": centresList})
+    # If the user's input isn't in the list, return a message
+    if(query):
+        if(query not in serviceList):
+            # Throw a 204 (No Content Found) if the user's query isn't a valid service
+            abort(204)
+        # Otherwise, we're able to serve up the Service Data
+        else:
+            centresList = []
+            # Iterate over the list of services in the Dictionary
+            for i in range(len(serviceDictionary[query])):
+                if(i == 0):
+                    continue
+                # Build out the JSON Object for the service
+                centreObject = {
+                    "CentreID": serviceDictionary[query][i]['CentreID'],
+                    "Suburb": serviceDictionary[query][i]['Suburb'],
+                    "Latitude": serviceDictionary[query][i]['Lat'],
+                    "Longitude": serviceDictionary[query][i]['Lon'],
+                }
+                # Populate a list with the Centre Objects
+                centresList.append(centreObject)
+            # Finally, return the data in a structured response
+            return dict(data = [{"service": query, "reporting_centres": centresList}])
+
+    # If the user's query was blank or null, return all the service data
+    elif (query == None or query == ""):
+        returnData = []
+
+        # For each Service, iterate through the Service Dictionary and populate the same JSON Structure as above.
+        for i in range(len(serviceList)):
+            if(i == 0):
+                continue
+            currentService = serviceList[i]
+            currentCentres = []
+            for i in range(len(serviceDictionary[currentService])):
+                if (i == 0):
+                    continue
+                centreObject = {
+                    "CentreID": serviceDictionary[currentService][i]['CentreID'],
+                    "Suburb": serviceDictionary[currentService][i]['Suburb'],
+                    "Latitude": serviceDictionary[currentService][i]['Lat'],
+                    "Longitude": serviceDictionary[currentService][i]['Lon'],
+                }
+                currentCentres.append(centreObject)
+                allCentres = {"service": currentService, "reporting_centres": currentCentres}
+                returnData.append(allCentres)
+        return dict(data=returnData)
 
 run(host="localhost", port=8080, reloader=True)
