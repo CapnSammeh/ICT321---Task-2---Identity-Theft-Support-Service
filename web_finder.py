@@ -35,17 +35,18 @@ def get_services():
         if postcode not in validPostcodes:
             validPostcodes.append(postcode)
 
-    # Error Handling
-    # TODO This needs to be tidied up
+    ## Error Handling
+    # If the postcode isn't null, but is less than or greater than 4 characters, it's an incorrectly formatted postcode
     if(postcodeInput != '' and len(postcodeInput) != 4):
         abort(400, "Invalid Postcode; please adhere to the XXXX format")
+    # If the postcode isn't in our list of valid postcodes (pulled from the data source), then we have no information to display
     elif(postcodeInput != '' and postcodeInput not in validPostcodes):
         abort(404, "No content available for the supplied postcode")
     
+    # If there isn't a postcode submitted, we want to return all the data
     elif(postcodeInput == ''):
         # Lookup the Postcode from our File
         lookup = etl.lookup(data, ("Postcode", "Suburb"), "Service")
-        print(lookup)
 
         #Iterate through the response to create our Services List, as well as identify the Suburb Name
         servicesList = []
@@ -53,8 +54,10 @@ def get_services():
             test = {"postcode": key[0], "suburb": key[1], "services":value}
             servicesList.append(test)
 
+        # Return the relevant data 
         return dict(data=servicesList)
-
+    
+    # Finally, if the user's input is valid, let's perform the lookup
     try:
         # Lookup the Postcode from our File
         lookup = etl.lookup(data, "Postcode", ("Suburb", "Service"))
